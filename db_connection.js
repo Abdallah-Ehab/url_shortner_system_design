@@ -9,6 +9,6 @@ const pool = new Pool({
   port: 5432, // Default Postgres port
 });
 
-module.exports = {
+export default {
   query: (text, params) => pool.query(text, params),
 };
