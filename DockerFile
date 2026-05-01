@@ -1,0 +1,18 @@
+# Use a lightweight Node.js image
+FROM node:20-slim
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install dependencies first (leverages Docker cache)
+COPY package*.json ./
+RUN npm install --production
+
+# Copy the rest of your source code
+COPY . .
+
+# Your app listens on the port defined in .env
+EXPOSE 3000
+
+# Start the server
+CMD ["node", "server.js"]

@@ -1,0 +1,46 @@
+services:
+  # The Redis instance (Your central source for ID Ranges)
+  cache:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - url-net
+
+  # The PostgreSQL database (Persistent storage)
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: url_shortener
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - url-net
+
+  # Your Express Service (Horizontally Scalable)
+  shorten-service:
+    build: .
+    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=redis://cache:6379
+      - PORT=3000
+    depends_on:
+      - db
+      - cache
+    networks:
+      - url-net
+
+networks:
+  url-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
