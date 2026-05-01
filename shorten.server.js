@@ -1,16 +1,22 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import urlRouter from './routers/url.router.js'
+import db_connection from './db_connection.js'
+import redisClient from './redis_client.js'
 dotenv.config()
 const app = express()
 
 app.use(express.json())
 app.use('/api/url', urlRouter)
 
-app.get('/api/healthCheck', (req, res) => {
-  // I need to ping all the services
-  // but what is the main service
-  res.send('service is up and running')
+app.get('/api/healthCheck', async (req, res) => {
+  try{
+    await db_connection.query('SELECT 1')
+    await redisClient.ping()
+    res.status(200).json({status: 'success', message: 'All services are healthy'})
+  }catch(error){
+    res.status(500).json({status: 'error', message: error.message})
+  }
 })
 
 
