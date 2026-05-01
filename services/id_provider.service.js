@@ -1,3 +1,6 @@
+const CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+
 export class IDProvider {
     constructor(redisClient, rangeSize = 1000n) {
         this.redis = redisClient;
