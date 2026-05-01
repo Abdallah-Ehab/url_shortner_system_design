@@ -6,12 +6,13 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "nodemon shorten.server.js redirect.server.js analytics.server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Abdallah Ehab",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongoose": "^9.6.1"
   },

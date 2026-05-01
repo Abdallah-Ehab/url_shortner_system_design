@@ -2,7 +2,7 @@
 
 ### so here is what we should do
 
-- [ ] create the server
+- [x] create the server
 - [ ] create three endpoints:
     1. /api/shorten
     2. /api/:url **redirect: status 302**
