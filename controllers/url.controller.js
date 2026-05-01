@@ -1,15 +1,28 @@
 import Url from '../models/url.model.js';
 import db from '../db_connection.js';
+import {encodeBase62} from '../services/encode.service.js';
 
-export const createShortUrl = async (req, res) => {
-  const { originalUrl } = req.body;
-  // I need to generate a unique hash for the original url
-  // and then save the original url and the hash in the database
-  // and then return the short url to the user
-  res.send('Short URL created successfully');
-}
+export default class UrlController {
+    constructor(idProvider) {
+        this.idProvider = idProvider;
+    }
 
+    createShortUrl = async (req, res) => {
+        try {
+            const { originalUrl } = req.body;
 
-export const redirectToOriginalUrl = async (req, res) => {
-    const { shortUrl } = req.params;
+            // Ask the injected provider for the ID
+            const id = await this.idProvider.getNextID();
+            const hash = encodeBase62(id);
+
+            await db.query(
+                'INSERT INTO urls (id, hash, original_url) VALUES ($1, $2, $3)',
+                [id.toString(), hash, originalUrl]
+            );
+
+            res.status(201).json({ status: 'success', shortUrl: hash });
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: error.message });
+        }
+    }
 }
