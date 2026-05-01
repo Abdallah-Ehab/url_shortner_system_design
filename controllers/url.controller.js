@@ -25,4 +25,19 @@ export default class UrlController {
             res.status(500).json({ status: 'error', message: error.message });
         }
     }
+    redirectToOriginalUrl = async (req, res) => {
+        try {
+            const { shortUrl } = req.params;
+            const result = await db.query('SELECT original_url FROM urls WHERE hash = $1', [shortUrl]);
+
+            if (result.rows.length === 0) {
+                return res.status(404).json({ status: 'error', message: 'URL not found' });
+            }
+
+            const originalUrl = result.rows[0].original_url;
+            res.status(302).redirect(originalUrl);
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: error.message });
+        }
+    }
 }
