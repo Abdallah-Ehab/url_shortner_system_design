@@ -1,11 +1,13 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import urlRouter from './routers/url.router.js'
 import db_connection from './db_connection.js'
-import redisClient from './redis.client.js'
+import redisClient from './cache_client.js'
 import { IDProvider } from './services/id_provider.service.js'
 import createUrlRouter from './routers/url.router.js'
-
+import EncoderService from './services/encode.service.js'
+import UrlController from './controllers/url.controller.js'
+import UrlRepository from './repos/url.repo.js'
+import CacheClient from './cache_client.js'
 
 dotenv.config()
 const app = express()
@@ -24,14 +26,19 @@ app.get('/api/healthCheck', async (req, res) => {
 
 
 
-const startServer = async () => {
+const bootStrap = async () => {
   try{
-    await redisClient.connect()
+    const client = redisClient.createClient();
+    const redisClient = new CacheClient(client)
     console.log('Connected to Redis')
 
     const idProvider = IDProvider.getInstance(redisClient, 1000n);
+    const urlRepository = new UrlRepository(db_connection);
+    const encoderService = new EncoderService();
 
-    const urlRouter = createUrlRouter(idProvider);
+    const urlController = new UrlController(idProvider, redisClient, urlRepository, encoderService);
+
+    const urlRouter = createUrlRouter(urlController);
 
     app.use('/api/url', urlRouter)
 
@@ -44,4 +51,4 @@ const startServer = async () => {
 
 }
 
-startServer();
+bootStrap();
