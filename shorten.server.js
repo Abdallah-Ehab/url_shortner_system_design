@@ -20,6 +20,19 @@ app.get('/api/healthCheck', async (req, res) => {
 })
 
 
-app.listen(process.env.shorten, (req, res) => {
-  console.log(`Server is running on port ${process.env.shorten}`)
-})
+
+const startServer = async () => {
+  try{
+    await redisClient.connect()
+    console.log('Connected to Redis')
+
+    app.listen(process.env.shorten, (req, res) => {
+      console.log(`Server is running on port ${process.env.shorten}`)
+    })
+  }catch(e){
+    console.error('Failed to start server', e)
+  }
+
+}
+
+startServer();
