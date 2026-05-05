@@ -1,4 +1,4 @@
-const CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 
 
 export class IDProvider {
