@@ -6,7 +6,6 @@ export default class UrlController {
     constructor(idProvider) {
         this.idProvider = idProvider;
     }
-
     createShortUrl = async (req, res) => {
         try {
             const { originalUrl } = req.body;
