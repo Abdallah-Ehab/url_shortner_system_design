@@ -1,7 +1,7 @@
 import router from 'express'
 import UrlController from '../controllers/url.controller.js'
 import { IDProvider } from '../services/id_provider.service.js'
-import redisClient from '../redis_client.js'
+import redisClient from '../redis.client.js'
 
 const urlRouter = router()
 
