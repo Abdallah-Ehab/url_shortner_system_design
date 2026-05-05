@@ -2,6 +2,14 @@
 
 
 export class IDProvider {
+
+    static instance = null;
+    static getInstance(redisClient, rangeSize) {
+        if (!IDProvider.instance) {
+            IDProvider.instance = new IDProvider(redisClient, rangeSize);
+        }
+        return IDProvider.instance;
+    }
     constructor(redisClient, rangeSize = 1000n) {
         this.redis = redisClient;
         this.rangeSize = rangeSize;
