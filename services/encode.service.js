@@ -1,3 +1,5 @@
+const CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 export function encodeBase62(num) {
   if (num === 0n) return CHARSET[0]
 
