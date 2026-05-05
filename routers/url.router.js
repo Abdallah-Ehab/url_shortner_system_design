@@ -3,13 +3,14 @@ import UrlController from '../controllers/url.controller.js'
 import { IDProvider } from '../services/id_provider.service.js'
 import redisClient from '../redis.client.js'
 
-const urlRouter = router()
 
+export default function createUrlRouter(idProvider) {
+    const router = router();
 
-const idProvider = new IDProvider(redisClient);
-const urlController = new UrlController(idProvider);
+    const urlController = new UrlController(idProvider);
 
-urlRouter.post('/shorten', urlController.createShortUrl)
-urlRouter.get('/:shortUrl', urlController.redirectToOriginalUrl)
+    router.post('/shorten', urlController.createShortUrl);
+    router.get('/:shortUrl', urlController.redirectToOriginalUrl);
 
-export default urlRouter
+    return router;
+}
